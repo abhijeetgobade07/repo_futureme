@@ -31,12 +31,33 @@ async function query(sql, params) {
   }
 }
 
+// ------------------ UTC <-> IST Helper ------------------
+function utcToIST(utcDateTime) {
+  const date = new Date(utcDateTime);
+  // IST offset = +5:30 hours
+  const istDate = new Date(date.getTime() + 5.5 * 60 * 60 * 1000);
+  return (
+    istDate.getFullYear() +
+    "-" +
+    String(istDate.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(istDate.getDate()).padStart(2, "0") +
+    " " +
+    String(istDate.getHours()).padStart(2, "0") +
+    ":" +
+    String(istDate.getMinutes()).padStart(2, "0") +
+    ":" +
+    String(istDate.getSeconds()).padStart(2, "0")
+  );
+}
+// --------------------------------------------------------
+
 // 4. Mail transporter setup (Gmail)
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "abhijeet.gobade07@gmail.com",  // Your Gmail
-    pass: "bdkb deau clfy nnkc",          // Gmail App Password
+    user: "abhijeet.gobade07@gmail.com", // Your Gmail
+    pass: "bdkb deau clfy nnkc",         // Gmail App Password
   },
 });
 
@@ -55,15 +76,22 @@ app.post("/send-letter", async (req, res) => {
     return res.json({ message: "Invalid datetime format." });
   }
 
+  // Convert incoming IST datetime to UTC before storing
+  const [datePart, timePart] = deliveryDateTime.split(" ");
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hours, minutes, seconds] = timePart.split(":").map(Number);
+  const istDate = new Date(year, month - 1, day, hours, minutes, seconds);
+  const utcDateTime = new Date(istDate.getTime() - 5.5 * 60 * 60 * 1000); // IST -> UTC
+
   const sql = `
     INSERT INTO letters (first_name, last_name, email, delivery_datetime, letter_text, sent)
     VALUES ($1, $2, $3, $4, $5, false)
   `;
 
   try {
-    await query(sql, [firstName, lastName, email, deliveryDateTime, letter]);
+    await query(sql, [firstName, lastName, email, utcDateTime.toISOString(), letter]);
 
-    // Confirmation email
+    // Confirmation email (display in IST)
     const mailOptions = {
       from: '"FutureMe Bot" <abhijeet.gobade07@gmail.com>',
       to: email,
@@ -90,25 +118,25 @@ app.post("/send-letter", async (req, res) => {
 cron.schedule("* * * * *", async () => {
   const now = new Date();
 
-  // Format datetime (YYYY-MM-DD HH:mm:ss)
+  // Format datetime in UTC for DB query
   const pad = (num) => (num < 10 ? "0" + num : num);
-  const formatDateTime = (date) => {
+  const formatUTC = (date) => {
     return (
-      date.getFullYear() +
+      date.getUTCFullYear() +
       "-" +
-      pad(date.getMonth() + 1) +
+      pad(date.getUTCMonth() + 1) +
       "-" +
-      pad(date.getDate()) +
+      pad(date.getUTCDate()) +
       " " +
-      pad(date.getHours()) +
+      pad(date.getUTCHours()) +
       ":" +
-      pad(date.getMinutes()) +
+      pad(date.getUTCMinutes()) +
       ":00"
     );
   };
 
-  const startWindow = formatDateTime(now);
-  const endWindow = formatDateTime(new Date(now.getTime() + 60000)); // +1 min
+  const startWindow = formatUTC(now);
+  const endWindow = formatUTC(new Date(now.getTime() + 60000)); // +1 min
 
   try {
     const results = await query(
@@ -119,13 +147,16 @@ cron.schedule("* * * * *", async () => {
     for (let letter of results) {
       const { first_name, email, letter_text, delivery_datetime, id } = letter;
 
+      // Convert UTC from DB to IST for email display
+      const istDeliveryDateTime = utcToIST(delivery_datetime);
+
       const mailOptions = {
         from: '"FutureMe Bot" <abhijeet.gobade07@gmail.com>',
         to: email,
         subject: "📨 A Letter from Your Past Self",
         html: `
           <p>Hi ${first_name},</p>
-          <p>You asked us to deliver this letter on <strong>${delivery_datetime} IST</strong>.</p>
+          <p>You asked us to deliver this letter on <strong>${istDeliveryDateTime} IST</strong>.</p>
           <p>Here it is:</p>
           <blockquote style="border-left: 3px solid #ccc; padding-left: 10px; color: #555;">${letter_text}</blockquote>
           <p>— FutureMe Team</p>
