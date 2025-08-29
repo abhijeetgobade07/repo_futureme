@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import "./App.css";
 
+// Use env variable for backend, fallback to localhost
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 export default function App() {
   useEffect(() => {
     // Set min date for date picker (today)
@@ -21,22 +24,22 @@ export default function App() {
       return;
     }
 
-    // Combine date and time into MySQL DATETIME format string (assumed IST)
+    // Combine date and time into MySQL DATETIME format string
     const deliveryDateTime = `${date} ${time}:00`;
 
-    fetch("http://localhost:5000/send-letter", {
+    fetch(`${API_BASE_URL}/send-letter`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         firstName,
         lastName,
         email,
-        deliveryDateTime,  // Send as IST datetime string
-        letter
-      })
+        deliveryDateTime,
+        letter,
+      }),
     })
-      .then(res => res.json())
-      .then(data => alert(data.message))
+      .then((res) => res.json())
+      .then((data) => alert(data.message))
       .catch(() => alert("Something went wrong. Try again later."));
   }
 
@@ -75,7 +78,9 @@ export default function App() {
             <label htmlFor="future-email">Your email</label>
             <input type="email" id="future-email" placeholder="Enter your email" />
 
-            <button className="send-btn" onClick={sendLetter}>Send to the Future</button>
+            <button className="send-btn" onClick={sendLetter}>
+              Send to the Future
+            </button>
           </div>
         </div>
       </div>
