@@ -57,7 +57,7 @@ app.post("/send-letter", async (req, res) => {
 
   const sql = `
     INSERT INTO letters (first_name, last_name, email, delivery_datetime, letter_text, sent)
-    VALUES ($1, $2, $3, $4, $5, 0)
+    VALUES ($1, $2, $3, $4, $5, false)
   `;
 
   try {
@@ -112,7 +112,7 @@ cron.schedule("* * * * *", async () => {
 
   try {
     const results = await query(
-      "SELECT * FROM letters WHERE delivery_datetime BETWEEN $1 AND $2 AND sent = 0",
+      "SELECT * FROM letters WHERE delivery_datetime BETWEEN $1 AND $2 AND sent = false",
       [startWindow, endWindow]
     );
 
@@ -136,7 +136,7 @@ cron.schedule("* * * * *", async () => {
         await transporter.sendMail(mailOptions);
         console.log(`✅ Letter sent to ${email}`);
 
-        await query("UPDATE letters SET sent = 1 WHERE id = $1", [id]);
+        await query("UPDATE letters SET sent = true WHERE id = $1", [id]);
       } catch (err) {
         console.error(`❌ Failed to send letter to ${email}:`, err);
       }
