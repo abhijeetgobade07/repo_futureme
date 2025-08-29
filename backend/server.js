@@ -1,3 +1,4 @@
+
 // 1. Imports
 import express from "express";
 import cors from "cors";
@@ -11,6 +12,16 @@ const { Pool } = pkg;
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// timezone testing
+app.get("/check-time", (req, res) => {
+  res.json({
+    tz: process.env.TZ || "not set",
+    local: new Date().toString(),
+    utc: new Date().toUTCString(),
+  });
+});
+
 
 // 3. PostgreSQL connection (Render provides DATABASE_URL env variable)
 const pool = new Pool({
