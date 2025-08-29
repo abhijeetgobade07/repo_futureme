@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 3. PostgreSQL connection (Render gives DATABASE_URL env variable)
+// 3. PostgreSQL connection (Render provides DATABASE_URL env variable)
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -41,36 +41,6 @@ const transporter = nodemailer.createTransport({
 });
 
 // 5. Routes
-
-// Signup route
-app.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.json({ message: "Fill all fields" });
-
-  try {
-    await query("INSERT INTO users (email, password) VALUES ($1, $2)", [email, password]);
-    res.json({ message: "Signup successful!" });
-  } catch (err) {
-    if (err.code === "23505") return res.json({ message: "Email exists" }); // PostgreSQL duplicate entry
-    console.error("DB error:", err);
-    res.json({ message: "DB error" });
-  }
-});
-
-// Login route
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const results = await query("SELECT * FROM users WHERE email = $1 AND password = $2", [email, password]);
-    if (results.length === 0) return res.json({ message: "Invalid credentials" });
-
-    res.json({ message: "Login successful!" });
-  } catch (err) {
-    console.error("DB error:", err);
-    res.json({ message: "DB error" });
-  }
-});
 
 // Send letter route
 app.post("/send-letter", async (req, res) => {
@@ -120,7 +90,7 @@ app.post("/send-letter", async (req, res) => {
 cron.schedule("* * * * *", async () => {
   const now = new Date();
 
-  // Format datetime (Postgres expects ISO strings)
+  // Format datetime (YYYY-MM-DD HH:mm:ss)
   const pad = (num) => (num < 10 ? "0" + num : num);
   const formatDateTime = (date) => {
     return (
@@ -176,5 +146,6 @@ cron.schedule("* * * * *", async () => {
   }
 });
 
-// 7. Start the server
-app.listen(5000, () => console.log("✅ Server running on http://localhost:5000"));
+// 7. Start the server (PORT from Render or fallback to 5000 locally)
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
