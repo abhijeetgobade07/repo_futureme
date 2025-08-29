@@ -1,4 +1,3 @@
-
 // 1. Imports
 import express from "express";
 import cors from "cors";
@@ -22,7 +21,6 @@ app.get("/check-time", (req, res) => {
   });
 });
 
-
 // 3. PostgreSQL connection (Render provides DATABASE_URL env variable)
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -42,10 +40,9 @@ async function query(sql, params) {
   }
 }
 
-// ------------------ UTC <-> IST Helper ------------------
+// ------------------ UTC <-> IST Helpers ------------------
 function utcToIST(utcDateTime) {
   const date = new Date(utcDateTime);
-  // IST offset = +5:30 hours
   const istDate = new Date(date.getTime() + 5.5 * 60 * 60 * 1000);
   return (
     istDate.getFullYear() +
@@ -60,6 +57,15 @@ function utcToIST(utcDateTime) {
     ":" +
     String(istDate.getSeconds()).padStart(2, "0")
   );
+}
+
+function istToUTC(istString) {
+  // input format: "YYYY-MM-DD HH:mm:ss"
+  const [datePart, timePart] = istString.split(" ");
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hours, minutes, seconds] = timePart.split(":").map(Number);
+  const istDate = new Date(year, month - 1, day, hours, minutes, seconds);
+  return new Date(istDate.getTime() - 5.5 * 60 * 60 * 1000);
 }
 // --------------------------------------------------------
 
@@ -87,12 +93,8 @@ app.post("/send-letter", async (req, res) => {
     return res.json({ message: "Invalid datetime format." });
   }
 
-  // Convert incoming IST datetime to UTC before storing
-  const [datePart, timePart] = deliveryDateTime.split(" ");
-  const [year, month, day] = datePart.split("-").map(Number);
-  const [hours, minutes, seconds] = timePart.split(":").map(Number);
-  const istDate = new Date(year, month - 1, day, hours, minutes, seconds);
-  const utcDateTime = new Date(istDate.getTime() - 5.5 * 60 * 60 * 1000); // IST -> UTC
+  // Convert IST datetime string -> UTC Date object
+  const utcDateTime = istToUTC(deliveryDateTime);
 
   const sql = `
     INSERT INTO letters (first_name, last_name, email, delivery_datetime, letter_text, sent)
@@ -102,7 +104,7 @@ app.post("/send-letter", async (req, res) => {
   try {
     await query(sql, [firstName, lastName, email, utcDateTime.toISOString(), letter]);
 
-    // Confirmation email (display in IST)
+    // Confirmation email (always show IST to user)
     const mailOptions = {
       from: '"FutureMe Bot" <abhijeet.gobade07@gmail.com>',
       to: email,
