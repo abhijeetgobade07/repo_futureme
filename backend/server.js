@@ -5,6 +5,18 @@ import nodemailer from "nodemailer";
 import cron from "node-cron";
 import pkg from "pg";
 
+// time zone testing start
+
+app.get("/check-time", (req, res) => {
+  res.json({
+    serverTime: new Date().toString(),        // Node.js local server time
+    serverUTC: new Date().toISOString(),      // UTC
+    tzOffsetMinutes: new Date().getTimezoneOffset() // offset from UTC
+  });
+});
+
+// time zone testing end
+
 const { Pool } = pkg;
 
 // 2. App setup
