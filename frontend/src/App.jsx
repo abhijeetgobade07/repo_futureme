@@ -29,7 +29,7 @@ export default function App() {
     const [year, month, day] = date.split("-").map(Number);
     // Create Date in IST (local) and then convert to UTC
     const istDate = new Date(year, month - 1, day, hours, minutes);
-    const utcDateTime = new Date(istDate.getTime()); // IST -> UTC
+    const utcDateTime = new Date(istDate.getTime()- 5.5 * 60 * 60 * 1000); // IST -> UTC
     const deliveryDateTime = utcDateTime.toISOString().slice(0, 19).replace("T", " ");
     // --------------------------------------------------------
 
