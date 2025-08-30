@@ -54,6 +54,17 @@ const transporter = nodemailer.createTransport({
 });
 
 // 5. Routes
+
+//To keep render and db active
+app.get("/healthz", async (req, res) => {
+  try {
+    await query("SELECT 1"); // Simple DB query to keep Neon active
+    res.status(200).json({ status: "ok" });
+  } catch (err) {
+    res.status(500).json({ status: "error" });
+  }
+});
+
 // Send letter route
 app.post("/send-letter", async (req, res) => {
   const { firstName, lastName, email, deliveryDateTime, letter } = req.body;
