@@ -24,14 +24,11 @@ export default function App() {
       return;
     }
 
-    // ------------------ Convert IST -> UTC ------------------
+    // Convert IST to UTC
     const [hours, minutes] = time.split(":").map(Number);
     const [year, month, day] = date.split("-").map(Number);
-    // Create Date in IST (local) and then convert to UTC
-    const istDate = new Date(year, month - 1, day, hours, minutes);
-    const utcDateTime = new Date(istDate.getTime()- 5.5 * 60 * 60 * 1000); // IST -> UTC
-    const deliveryDateTime = utcDateTime.toISOString().slice(0, 19).replace("T", " ");
-    // --------------------------------------------------------
+    const istDate = new Date(Date.UTC(year, month - 1, day, hours, minutes) - 5.5 * 60 * 60 * 1000);
+    const deliveryDateTime = istDate.toISOString().slice(0, 19).replace("T", " ");
 
     fetch(`${API_BASE_URL}/send-letter`, {
       method: "POST",
