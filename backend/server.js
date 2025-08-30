@@ -65,7 +65,7 @@ function istToUTC(istString) {
   const [year, month, day] = datePart.split("-").map(Number);
   const [hours, minutes, seconds] = timePart.split(":").map(Number);
   const istDate = new Date(year, month - 1, day, hours, minutes, seconds);
-  return new Date(istDate.getTime() - 5.5 * 60 * 60 * 1000);
+  return new Date(istDate.getTime() - 5.5 * 60 * 60 * 1000); // UTC Date
 }
 // --------------------------------------------------------
 
@@ -102,7 +102,8 @@ app.post("/send-letter", async (req, res) => {
   `;
 
   try {
-    await query(sql, [firstName, lastName, email, utcDateTime.toISOString(), letter]);
+    // ✅ FIX: store Date object directly (pg handles it as UTC timestamptz)
+    await query(sql, [firstName, lastName, email, utcDateTime, letter]);
 
     // Confirmation email (always show IST to user)
     const mailOptions = {
