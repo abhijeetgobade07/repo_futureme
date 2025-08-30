@@ -35,7 +35,7 @@ async function query(sql, params) {
 function formatDate(utcDate) {
   const date = new Date(utcDate);
   // Add 5.5 hours for IST
-  const istDate = new Date(date.getTime());
+  const istDate = new Date(date.getTime() + 5.5 * 60 * 60 * 1000);
   const pad = (num) => String(num).padStart(2, "0");
   return `${istDate.getFullYear()}-${pad(istDate.getMonth() + 1)}-${pad(
     istDate.getDate()
@@ -54,26 +54,41 @@ const transporter = nodemailer.createTransport({
 });
 
 // 5. Routes
-
 // Send letter route
 app.post("/send-letter", async (req, res) => {
   const { firstName, lastName, email, deliveryDateTime, letter } = req.body;
 
+  // Validate input fields
   if (!firstName || !lastName || !email || !deliveryDateTime || !letter) {
     return res.status(400).json({ message: "Please fill in all fields." });
+  }
+
+  // Validate deliveryDateTime is a valid UTC date
+  let utcDeliveryDateTime;
+  try {
+    utcDeliveryDateTime = new Date(deliveryDateTime);
+    if (isNaN(utcDeliveryDateTime.getTime())) {
+      return res.status(400).json({ message: "Invalid deliveryDateTime format. Please use a valid UTC date." });
+    }
+    utcDeliveryDateTime = utcDeliveryDateTime.toISOString();
+  } catch (err) {
+    return res.status(400).json({ message: "Error parsing deliveryDateTime. Please use a valid UTC date." });
   }
 
   const sql = `
     INSERT INTO letters (first_name, last_name, email, delivery_datetime, letter_text, sent)
     VALUES ($1, $2, $3, $4, $5, false)
+    RETURNING id
   `;
 
   try {
-    await query(sql, [firstName, lastName, email, deliveryDateTime, letter]);
+    // Store in database
+    await query(sql, [firstName, lastName, email, utcDeliveryDateTime, letter]);
 
-    // Format the UTC datetime for confirmation email display in IST
-    const istDeliveryDateTime = formatDate(deliveryDateTime);
+    // Format UTC to IST for email
+    const istDeliveryDateTime = formatDate(utcDeliveryDateTime);
 
+    // Send confirmation email
     const mailOptions = {
       from: '"FutureMe Bot" <abhijeet.gobade07@gmail.com>',
       to: email,
@@ -89,10 +104,10 @@ app.post("/send-letter", async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
-    res.json({ message: "Letter scheduled and confirmation email sent!" });
+    res.status(200).json({ message: "Letter scheduled and confirmation email sent!" });
   } catch (err) {
-    console.error("Error:", err);
-    res.status(500).json({ message: "Failed to send letter. Try again." });
+    console.error("Error in /send-letter:", err);
+    res.status(500).json({ message: "Failed to schedule letter. Please try again." });
   }
 });
 
@@ -106,7 +121,7 @@ cron.schedule("* * * * *", async () => {
     for (let letter of results) {
       const { first_name, email, letter_text, delivery_datetime, id } = letter;
 
-      // Format UTC from DB to IST for email display
+      // Format UTC from DB to IST for email
       const istDeliveryDateTime = formatDate(delivery_datetime);
 
       const mailOptions = {
@@ -125,7 +140,6 @@ cron.schedule("* * * * *", async () => {
       try {
         await transporter.sendMail(mailOptions);
         console.log(`✅ Letter sent to ${email}`);
-
         await query("UPDATE letters SET sent = true WHERE id = $1", [id]);
       } catch (err) {
         console.error(`❌ Failed to send letter to ${email}:`, err);
@@ -136,6 +150,6 @@ cron.schedule("* * * * *", async () => {
   }
 });
 
-// 7. Start the server (PORT from Render or fallback to 5000 locally)
+// 7. Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
