@@ -35,7 +35,7 @@ async function query(sql, params) {
 function formatDate(utcDate) {
   const date = new Date(utcDate);
   // Add 5.5 hours for IST
-  const istDate = new Date(date.getTime() + 5.5 * 60 * 60 * 1000);
+  const istDate = new Date(date.getTime());
   const pad = (num) => String(num).padStart(2, "0");
   return `${istDate.getFullYear()}-${pad(istDate.getMonth() + 1)}-${pad(
     istDate.getDate()
