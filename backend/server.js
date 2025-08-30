@@ -12,15 +12,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// timezone testing
-app.get("/check-time", (req, res) => {
-  res.json({
-    tz: process.env.TZ || "not set",
-    local: new Date().toString(),
-    utc: new Date().toUTCString(),
-  });
-});
-
 // 3. PostgreSQL connection (Render provides DATABASE_URL env variable)
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -40,41 +31,25 @@ async function query(sql, params) {
   }
 }
 
-// ------------------ UTC <-> IST Helpers ------------------
-function utcToIST(utcDateTime) {
-  const date = new Date(utcDateTime);
+// Helper function to format UTC date for IST display
+function formatDate(utcDate) {
+  const date = new Date(utcDate);
+  // Add 5.5 hours for IST
   const istDate = new Date(date.getTime() + 5.5 * 60 * 60 * 1000);
-  return (
-    istDate.getFullYear() +
-    "-" +
-    String(istDate.getMonth() + 1).padStart(2, "0") +
-    "-" +
-    String(istDate.getDate()).padStart(2, "0") +
-    " " +
-    String(istDate.getHours()).padStart(2, "0") +
-    ":" +
-    String(istDate.getMinutes()).padStart(2, "0") +
-    ":" +
-    String(istDate.getSeconds()).padStart(2, "0")
-  );
+  const pad = (num) => String(num).padStart(2, "0");
+  return `${istDate.getFullYear()}-${pad(istDate.getMonth() + 1)}-${pad(
+    istDate.getDate()
+  )} ${pad(istDate.getHours())}:${pad(istDate.getMinutes())}:${pad(
+    istDate.getSeconds()
+  )}`;
 }
-
-function istToUTC(istString) {
-  // input format: "YYYY-MM-DD HH:mm:ss"
-  const [datePart, timePart] = istString.split(" ");
-  const [year, month, day] = datePart.split("-").map(Number);
-  const [hours, minutes, seconds] = timePart.split(":").map(Number);
-  const istDate = new Date(year, month - 1, day, hours, minutes, seconds);
-  return new Date(istDate.getTime() - 5.5 * 60 * 60 * 1000); // UTC Date
-}
-// --------------------------------------------------------
 
 // 4. Mail transporter setup (Gmail)
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "abhijeet.gobade07@gmail.com", // Your Gmail
-    pass: "bdkb deau clfy nnkc",         // Gmail App Password
+    user: "abhijeet.gobade07@gmail.com",
+    pass: "bdkb deau clfy nnkc",
   },
 });
 
@@ -85,16 +60,8 @@ app.post("/send-letter", async (req, res) => {
   const { firstName, lastName, email, deliveryDateTime, letter } = req.body;
 
   if (!firstName || !lastName || !email || !deliveryDateTime || !letter) {
-    return res.json({ message: "Please fill in all fields." });
+    return res.status(400).json({ message: "Please fill in all fields." });
   }
-
-  // Validate datetime format (YYYY-MM-DD HH:mm:ss)
-  if (!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(deliveryDateTime)) {
-    return res.json({ message: "Invalid datetime format." });
-  }
-
-  // Convert IST datetime string -> UTC Date object
-  const utcDateTime = istToUTC(deliveryDateTime);
 
   const sql = `
     INSERT INTO letters (first_name, last_name, email, delivery_datetime, letter_text, sent)
@@ -102,17 +69,18 @@ app.post("/send-letter", async (req, res) => {
   `;
 
   try {
-    // ✅ FIX: store Date object directly (pg handles it as UTC timestamptz)
-    await query(sql, [firstName, lastName, email, utcDateTime, letter]);
+    await query(sql, [firstName, lastName, email, deliveryDateTime, letter]);
 
-    // Confirmation email (always show IST to user)
+    // Format the UTC datetime for confirmation email display in IST
+    const istDeliveryDateTime = formatDate(deliveryDateTime);
+
     const mailOptions = {
       from: '"FutureMe Bot" <abhijeet.gobade07@gmail.com>',
       to: email,
       subject: "📬 Your Letter is Scheduled!",
       html: `
         <p>Hi ${firstName},</p>
-        <p>Your letter to your future self is scheduled for <strong>${deliveryDateTime} IST</strong>.</p>
+        <p>Your letter to your future self is scheduled for <strong>${istDeliveryDateTime} IST</strong>.</p>
         <p>Here’s a preview:</p>
         <blockquote style="border-left: 3px solid #ccc; padding-left: 10px; color: #555;">${letter}</blockquote>
         <p>We’ll deliver it on the scheduled date and time. 🎉</p>
@@ -124,45 +92,22 @@ app.post("/send-letter", async (req, res) => {
     res.json({ message: "Letter scheduled and confirmation email sent!" });
   } catch (err) {
     console.error("Error:", err);
-    res.json({ message: "Failed to send letter. Try again." });
+    res.status(500).json({ message: "Failed to send letter. Try again." });
   }
 });
 
 // 6. Cron Job — Run every minute to check and send letters
 cron.schedule("* * * * *", async () => {
-  const now = new Date();
-
-  // Format datetime in UTC for DB query
-  const pad = (num) => (num < 10 ? "0" + num : num);
-  const formatUTC = (date) => {
-    return (
-      date.getUTCFullYear() +
-      "-" +
-      pad(date.getUTCMonth() + 1) +
-      "-" +
-      pad(date.getUTCDate()) +
-      " " +
-      pad(date.getUTCHours()) +
-      ":" +
-      pad(date.getUTCMinutes()) +
-      ":00"
-    );
-  };
-
-  const startWindow = formatUTC(now);
-  const endWindow = formatUTC(new Date(now.getTime() + 60000)); // +1 min
-
   try {
     const results = await query(
-      "SELECT * FROM letters WHERE delivery_datetime BETWEEN $1 AND $2 AND sent = false",
-      [startWindow, endWindow]
+      "SELECT * FROM letters WHERE delivery_datetime <= NOW() AND sent = false"
     );
 
     for (let letter of results) {
       const { first_name, email, letter_text, delivery_datetime, id } = letter;
 
-      // Convert UTC from DB to IST for email display
-      const istDeliveryDateTime = utcToIST(delivery_datetime);
+      // Format UTC from DB to IST for email display
+      const istDeliveryDateTime = formatDate(delivery_datetime);
 
       const mailOptions = {
         from: '"FutureMe Bot" <abhijeet.gobade07@gmail.com>',
