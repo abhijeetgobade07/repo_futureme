@@ -10,8 +10,8 @@
 html, body {
   height: 100%;
   font-family: 'Inter', Arial, sans-serif;
-  background: linear-gradient(135deg, #1e3a8a, #2563eb);
-  color: white;
+  background: linear-gradient(135deg, #ffe259, #ffa751); /* bright yellow → orange */
+  color: #333;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
