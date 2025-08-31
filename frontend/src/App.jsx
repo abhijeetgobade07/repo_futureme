@@ -1,12 +1,11 @@
+// App.jsx
 import { useEffect } from "react";
 import "./App.css";
 
-// Use env variable for backend, fallback to localhost
 const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export default function App() {
   useEffect(() => {
-    // Set min date for date picker (today)
     const today = new Date().toISOString().split("T")[0];
     document.getElementById("future-date").setAttribute("min", today);
   }, []);
@@ -50,18 +49,18 @@ export default function App() {
     <>
       {/* Navigation */}
       <div className="nav">
-        <span>Welcome!</span>
+        Welcome 👋
       </div>
 
       {/* Main content */}
       <div className="container">
         <div className="main-content">
-          <h1>Write a Letter to your future self</h1>
+          <h1>Write a Letter to Your Future Self</h1>
           <p>
-            Write. Pick a date and time. Send. Verify. That’s it 😊<br />
-            Your letter is safe with us - we’ve sent over 20 million letters in 20 years!
+            Reflect, write, and schedule a delivery. <br />
+            Your message will find you when the time is right ✨
           </p>
-          <textarea className="letter-box" placeholder="Dear FutureMe," />
+          <textarea className="letter-box" placeholder="Dear Future Me..." />
         </div>
 
         <div className="sidebar">
@@ -82,7 +81,7 @@ export default function App() {
             <input type="email" id="future-email" placeholder="Enter your email" />
 
             <button className="send-btn" onClick={sendLetter}>
-              Send to the Future
+              Send to the Future 🚀
             </button>
           </div>
         </div>
