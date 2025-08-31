@@ -47,18 +47,13 @@ export default function App() {
 
   return (
     <>
-      {/* Navigation */}
-      <div className="nav">
-        Welcome 👋
-      </div>
-
       {/* Main content */}
       <div className="container">
         <div className="main-content">
-          <h1>Write a Letter to Your Future Self</h1>
+          <h1>Write a Letter to Your Future Self 🌸</h1>
           <p>
-            Reflect, write, and schedule a delivery. <br />
-            Your message will find you when the time is right ✨
+            A colorful message of hope, love, or reflection. <br />
+            Pick a date, and let the future surprise you 💌
           </p>
           <textarea className="letter-box" placeholder="Dear Future Me..." />
         </div>
@@ -81,7 +76,7 @@ export default function App() {
             <input type="email" id="future-email" placeholder="Enter your email" />
 
             <button className="send-btn" onClick={sendLetter}>
-              Send to the Future 🚀
+              Send to the Future 🌈
             </button>
           </div>
         </div>
