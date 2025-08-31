@@ -1,22 +1,14 @@
 // App.jsx
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export default function App() {
-  const [modalMessage, setModalMessage] = useState("");
-  const [showModal, setShowModal] = useState(false);
-
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     document.getElementById("future-date").setAttribute("min", today);
   }, []);
-
-  function openModal(message) {
-    setModalMessage(message);
-    setShowModal(true);
-  }
 
   function sendLetter() {
     const firstName = document.getElementById("first-name").value.trim();
@@ -27,10 +19,11 @@ export default function App() {
     const letter = document.querySelector(".letter-box").value.trim();
 
     if (!firstName || !lastName || !email || !date || !time || !letter) {
-      openModal("⚠️ Please fill in all fields.");
+      alert("Please fill in all fields.");
       return;
     }
 
+    // Convert IST to UTC
     const [hours, minutes] = time.split(":").map(Number);
     const [year, month, day] = date.split("-").map(Number);
     const istDate = new Date(Date.UTC(year, month - 1, day, hours, minutes) - 5.5 * 60 * 60 * 1000);
@@ -48,12 +41,13 @@ export default function App() {
       }),
     })
       .then((res) => res.json())
-      .then((data) => openModal(data.message || "✅ Letter sent!"))
-      .catch(() => openModal("❌ Something went wrong. Try again later."));
+      .then((data) => alert(data.message))
+      .catch(() => alert("Something went wrong. Try again later."));
   }
 
   return (
     <>
+      {/* Main content */}
       <div className="container">
         <div className="main-content">
           <h1>Write a Letter to Your Future Self 🌸</h1>
@@ -87,16 +81,6 @@ export default function App() {
           </div>
         </div>
       </div>
-
-      {/* Custom Modal */}
-      {showModal && (
-        <div className="modal" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <p>{modalMessage}</p>
-            <button onClick={() => setShowModal(false)}>OK</button>
-          </div>
-        </div>
-      )}
     </>
   );
 }
