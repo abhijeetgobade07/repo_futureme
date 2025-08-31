@@ -1,14 +1,25 @@
 // App.jsx
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export default function App() {
+  const [notification, setNotification] = useState(null);
+
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     document.getElementById("future-date").setAttribute("min", today);
   }, []);
+
+  function showNotification(message, type = "success") {
+    setNotification({ message, type });
+
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+  }
 
   function sendLetter() {
     const firstName = document.getElementById("first-name").value.trim();
@@ -19,7 +30,7 @@ export default function App() {
     const letter = document.querySelector(".letter-box").value.trim();
 
     if (!firstName || !lastName || !email || !date || !time || !letter) {
-      alert("Please fill in all fields.");
+      showNotification("Please fill in all fields.", "error");
       return;
     }
 
@@ -41,12 +52,19 @@ export default function App() {
       }),
     })
       .then((res) => res.json())
-      .then((data) => alert(data.message))
-      .catch(() => alert("Something went wrong. Try again later."));
+      .then((data) => showNotification(data.message, "success"))
+      .catch(() => showNotification("Something went wrong. Try again later.", "error"));
   }
 
   return (
     <>
+      {/* Notification */}
+      {notification && (
+        <div className={`notification ${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
+
       {/* Main content */}
       <div className="container">
         <div className="main-content">
