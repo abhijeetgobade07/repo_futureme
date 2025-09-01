@@ -2,39 +2,35 @@
 
 /* ✅ Branding Header */
 .branding {
-  position: relative;   /* not fixed */
-  top: 0;
-  left: 0;
-  width: 100%;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 20px;
-  background: #fff8f0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  padding: 20px;
+  background: none; /* ❌ remove background */
+  box-shadow: none; /* ❌ remove shadow */
 }
 
 .branding-icon {
-  font-size: 2.5rem; /* Big enough to cover both lines */
-  color: #ff5722;
+  font-size: 3.2em; /* make the envelope icon big */
+  line-height: 1;
+  color: #222; /* dark text to contrast yellow */
 }
 
 .branding-text {
   display: flex;
   flex-direction: column;
   font-weight: 700;
-  line-height: 1.1;
+  color: #222;
+  font-size: 1.6em;
+  line-height: 1.2;
 }
 
 .branding-text .line1 {
-  font-size: 1.4rem;
-  color: #333;
+  font-size: 1em;
 }
 
 .branding-text .line2 {
-  font-size: 1.4rem;
-  color: #333;
+  font-size: 1.2em;
 }
 
 /* Container layout */
@@ -44,7 +40,8 @@
   gap: 24px;
   width: 100%;
   max-width: 1200px;
-  margin-top: 20px; /* ✅ space below branding */
+  margin: 0 auto;
+  padding: 20px;
 }
 
 /* Happy cards */
