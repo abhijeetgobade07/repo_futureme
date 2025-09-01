@@ -64,15 +64,16 @@ export default function App() {
 
   return (
     <>
-      {/* ✅ Branding */}
+      {/* ✅ Branding at the top */}
       <div className="branding">
-        <span className="branding-icon">✉️</span>
+        <div className="branding-icon">✉️</div>
         <div className="branding-text">
           <span className="line1">Letter to</span>
           <span className="line2">Future</span>
         </div>
       </div>
 
+      {/* ✅ Main content container below branding */}
       <div className="container">
         <div className="main-content">
           <h1>Write a Letter to Your Future Self 🌸</h1>
