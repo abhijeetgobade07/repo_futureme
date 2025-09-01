@@ -1,4 +1,3 @@
-// App.jsx
 import { useEffect, useState } from "react";
 import "./App.css";
 
@@ -6,6 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export default function App() {
   const [notification, setNotification] = useState(null);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
@@ -14,9 +14,11 @@ export default function App() {
 
   function showNotification(message, type = "success") {
     setNotification({ message, type });
+    setTimeout(() => setNotification(null), 3000); // Auto-dismiss after 3 seconds
   }
 
   function sendLetter() {
+    setIsSending(true);
     const firstName = document.getElementById("first-name").value.trim();
     const lastName = document.getElementById("last-name").value.trim();
     const email = document.getElementById("future-email").value.trim();
@@ -26,6 +28,7 @@ export default function App() {
 
     if (!firstName || !lastName || !email || !date || !time || !letter) {
       showNotification("Please fill in all fields.", "error");
+      setIsSending(false);
       return;
     }
 
@@ -52,10 +55,14 @@ export default function App() {
       }),
     })
       .then((res) => res.json())
-      .then((data) => showNotification(data.message, "success"))
-      .catch(() =>
-        showNotification("Something went wrong. Try again later.", "error")
-      );
+      .then((data) => {
+        showNotification(data.message, "success");
+        setIsSending(false);
+      })
+      .catch(() => {
+        showNotification("Something went wrong. Try again later.", "error");
+        setIsSending(false);
+      });
   }
 
   return (
@@ -101,22 +108,26 @@ export default function App() {
               placeholder="Enter your email"
             />
 
-            {/* ✅ Notification with close button */}
-            {notification && (
-              <div className={`notification ${notification.type}`}>
-                <span>{notification.message}</span>
-                <button
-                  className="close-btn"
-                  onClick={() => setNotification(null)}
-                >
-                  ✖
-                </button>
-              </div>
-            )}
-
-            <button className="send-btn" onClick={sendLetter}>
-              Send to the Future 🌈
-            </button>
+            <div className="button-container">
+              {notification && (
+                <div className={`notification ${notification.type}`}>
+                  <span>{notification.message}</span>
+                  <button
+                    className="close-btn"
+                    onClick={() => setNotification(null)}
+                  >
+                    ✖
+                  </button>
+                </div>
+              )}
+              <button
+                className={`send-btn ${isSending ? "sending" : ""}`}
+                onClick={sendLetter}
+                disabled={isSending}
+              >
+                {isSending ? "Sending..." : "Send to the Future 🌈"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
