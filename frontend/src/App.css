@@ -190,35 +190,29 @@ p {
 /* ✅ Branding Header */
 .branding {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
   padding: 20px;
   background: none; /* remove background */
   box-shadow: none; /* remove shadow */
-  margin-bottom: 20px; /* ✅ spacing from letter box */
-}
-
-.branding-icon {
-  font-size: 3.2em; /* big envelope */
-  line-height: 1;
-  color: #222; /* dark to contrast yellow */
+  margin-bottom: 20px; /* spacing from letter box */
 }
 
 .branding-text {
   display: flex;
   flex-direction: column;
   font-weight: 700;
-  color: #222;
-  font-size: 1.6em;
+  font-family: "Poppins", sans-serif;
   line-height: 1.2;
 }
 
 .branding-text .line1 {
-  font-size: 1em;
+  font-size: 1.6em;
+  color: #222; /* dark gray */
 }
 
 .branding-text .line2 {
-  font-size: 1.2em;
+  font-size: 1.8em;
+  color: #ff5722; /* coral/orange */
 }
 
 /* Responsive */
