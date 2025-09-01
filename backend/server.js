@@ -101,7 +101,7 @@ app.post("/send-letter", async (req, res) => {
 
     // Send confirmation email
     const mailOptions = {
-      from: '"FutureMe Bot" <abhijeet.gobade07@gmail.com>',
+      from: '"LetterToFuture" <abhijeet.gobade07@gmail.com>',
       to: email,
       subject: "📬 Your Letter is Scheduled!",
       html: `
@@ -110,7 +110,7 @@ app.post("/send-letter", async (req, res) => {
         <p>Here’s a preview:</p>
         <blockquote style="border-left: 3px solid #ccc; padding-left: 10px; color: #555;">${letter}</blockquote>
         <p>We’ll deliver it on the scheduled date and time. 🎉</p>
-        <p>— FutureMe Team</p>
+        <p>— LetterToFuture Team</p>
       `,
     };
 
@@ -136,7 +136,7 @@ cron.schedule("* * * * *", async () => {
       const istDeliveryDateTime = formatDate(delivery_datetime);
 
       const mailOptions = {
-        from: '"FutureMe Bot" <abhijeet.gobade07@gmail.com>',
+        from: '"LetterToFuture" <abhijeet.gobade07@gmail.com>',
         to: email,
         subject: "📨 A Letter from Your Past Self",
         html: `
@@ -144,7 +144,7 @@ cron.schedule("* * * * *", async () => {
           <p>You asked us to deliver this letter on <strong>${istDeliveryDateTime} IST</strong>.</p>
           <p>Here it is:</p>
           <blockquote style="border-left: 3px solid #ccc; padding-left: 10px; color: #555;">${letter_text}</blockquote>
-          <p>— FutureMe Team</p>
+          <p>— LetterToFuture Team</p>
         `,
       };
 
