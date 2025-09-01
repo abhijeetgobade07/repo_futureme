@@ -15,7 +15,7 @@ export default function App() {
 
   function showNotification(message, type = "success") {
     setNotification({ message, type });
-    setLoading(false);
+    setLoading(false); // hide loader when notification appears
   }
 
   function sendLetter() {
@@ -31,7 +31,7 @@ export default function App() {
       return;
     }
 
-    setLoading(true);
+    setLoading(true); // show loader
 
     // Convert IST to UTC
     const [hours, minutes] = time.split(":").map(Number);
@@ -64,14 +64,14 @@ export default function App() {
 
   return (
     <>
-      {/* ✅ Branding header */}
-      <header className="branding">
-        <div className="branding-icon">✉️</div>
+      {/* ✅ Branding */}
+      <div className="branding">
+        <span className="branding-icon">✉️</span>
         <div className="branding-text">
           <span className="line1">Letter to</span>
           <span className="line2">Future</span>
         </div>
-      </header>
+      </div>
 
       <div className="container">
         <div className="main-content">
@@ -113,10 +113,10 @@ export default function App() {
               placeholder="Enter your email"
             />
 
-            {/* Loader */}
+            {/* ✅ Show loader while waiting */}
             {loading && <div className="progress-bar"></div>}
 
-            {/* Notifications */}
+            {/* ✅ Notification with close button */}
             {notification && (
               <div className={`notification ${notification.type}`}>
                 <span>{notification.message}</span>
