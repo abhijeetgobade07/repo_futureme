@@ -66,7 +66,6 @@ export default function App() {
     <>
       {/* ✅ Branding sits on its own row */}
       <div className="branding">
-        <div className="branding-icon">✉️</div>
         <div className="branding-text">
           <span className="line1">Letter to</span>
           <span className="line2">Future</span>
