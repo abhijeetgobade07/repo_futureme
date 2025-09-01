@@ -70,8 +70,8 @@ export default function App() {
         <div className="main-content">
           <h1>Write a Letter to Your Future Self 🌸</h1>
           <p>
-            A colorful message of hope, love, or reflection. <br />
-            Pick a date, and let the future surprise you 💌
+            Pick a date, and let the future surprise you 💌 <br />
+            Your letter is private. No one else can read your letter — not even us 🔒
           </p>
           <textarea className="letter-box" placeholder="Dear Future Me..." />
         </div>
