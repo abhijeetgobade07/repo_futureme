@@ -33,6 +33,7 @@ export default function App() {
 
     setLoading(true);
 
+    // Convert IST to UTC
     const [hours, minutes] = time.split(":").map(Number);
     const [year, month, day] = date.split("-").map(Number);
     const istDate = new Date(
@@ -63,12 +64,12 @@ export default function App() {
 
   return (
     <>
-      {/* ✅ Branding Header */}
+      {/* ✅ Branding header */}
       <header className="branding">
         <div className="branding-icon">✉️</div>
         <div className="branding-text">
-          <div className="line1">Letter to</div>
-          <div className="line2">Future</div>
+          <span className="line1">Letter to</span>
+          <span className="line2">Future</span>
         </div>
       </header>
 
@@ -112,8 +113,10 @@ export default function App() {
               placeholder="Enter your email"
             />
 
+            {/* Loader */}
             {loading && <div className="progress-bar"></div>}
 
+            {/* Notifications */}
             {notification && (
               <div className={`notification ${notification.type}`}>
                 <span>{notification.message}</span>
