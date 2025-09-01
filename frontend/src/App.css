@@ -1,81 +1,45 @@
 /* App.css */
 
-/* ✅ Branding */
-.branding {
-  padding: 20px;
-  background: none;
-  box-shadow: none;
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-.branding-text {
-  display: flex;
-  flex-direction: column;
-  font-weight: 700;
-  font-family: "Poppins", sans-serif;
-  color: #222;
-  line-height: 1.1;
-}
-
-.branding-text .line1 {
-  font-size: 1.6em;
-  color: #000;
-}
-
-.branding-text .line2 {
-  font-size: 1.8em;
-  color: #ff5722; /* coral accent */
-}
-
-/* ✅ Hero Section */
-.hero {
-  text-align: left;
-  margin: 20px auto;
-  max-width: 900px;
-  padding: 0 20px;
-}
-
-.hero h1 {
-  font-size: 2.3em;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: #ff5722;
-}
-
-.hero p {
-  font-size: 1.1em;
-  line-height: 1.6;
-  color: #444;
-}
-
-/* ✅ Container layout */
+/* Container layout */
 .container {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 24px;
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
 }
 
-/* ✅ Cards */
+/* Happy cards */
 .main-content,
 .sidebar {
-  background: #fff8f0;
+  background: #fff8f0; /* soft warm white */
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* ✅ Letter Box */
+/* Typography */
+h1 {
+  font-size: 2.3em;
+  margin-bottom: 12px;
+  font-weight: 700;
+  color: #ff5722; /* coral accent */
+}
+
+p {
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* Textarea */
 .letter-box {
   width: 100%;
-  height: 300px;
+  height: 280px;
   padding: 16px;
   border-radius: 12px;
-  border: 2px solid #ffb347;
+  border: 2px solid #ffb347; /* warm orange border */
   font-size: 1em;
   outline: none;
   resize: none;
@@ -88,7 +52,11 @@
   border: 2px solid #ff5722;
 }
 
-/* ✅ Sidebar inputs */
+/* Sidebar inputs */
+.delivery-options {
+  margin: 10px 0;
+}
+
 .delivery-options label {
   display: block;
   font-size: 0.9em;
@@ -118,7 +86,7 @@
   color: #999;
 }
 
-/* ✅ Send button */
+/* Button */
 .send-btn {
   margin-top: 12px;
   width: 100%;
@@ -126,96 +94,75 @@
   font-size: 1.05em;
   font-weight: 600;
   border-radius: 10px;
-  background: linear-gradient(90deg, #00c9a7, #92fe9d);
+  background: linear-gradient(
+    90deg,
+    #00c9a7,
+    #92fe9d
+  ); /* turquoise → lime green */
   border: none;
   color: #fff;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.send-btn:hover:not(:disabled) {
+.send-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 201, 167, 0.4);
 }
 
-.send-btn.loading {
-  background: linear-gradient(90deg, #2193b0, #6dd5ed);
-  cursor: wait;
-}
-
-.send-btn.loading:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-/* ✅ Loader */
-.progress-bar {
-  height: 5px;
-  width: 100%;
-  background: linear-gradient(90deg, #2193b0, #6dd5ed);
-  border-radius: 5px;
-  margin-bottom: 10px;
-  animation: progressAnimation 2s linear infinite;
-}
-
-@keyframes progressAnimation {
-  0% {
-    transform: translateX(-100%);
-  }
-  50% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-/* ✅ Notifications */
+/* ✅ Notification inside sidebar */
 .notification {
-  margin: 10px 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
   padding: 12px 18px;
   border-radius: 10px;
   font-size: 0.95em;
   font-weight: 600;
   color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
+  position: relative; /* to position close button */
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
 }
 
-.notification.success {
-  background: linear-gradient(90deg, #2193b0, #6dd5ed);
-}
-
-.notification.error {
-  background: linear-gradient(90deg, #ff6a00, #ee0979);
-}
-
+/* Close button */
 .close-btn {
   background: transparent;
   border: none;
   color: #fff;
   font-size: 1.1em;
   cursor: pointer;
+  margin-left: 8px;
+  transition: opacity 0.2s ease;
 }
 
 .close-btn:hover {
   opacity: 0.7;
 }
 
-/* ✅ Responsive */
+/* Success theme */
+.notification.success {
+  background: linear-gradient(90deg, #00c9a7, #92fe9d);
+}
+
+/* Error theme */
+.notification.error {
+  background: linear-gradient(90deg, #ff6a00, #ee0979);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .container {
     grid-template-columns: 1fr;
   }
-
-  .hero {
-    text-align: center;
+  .main-content,
+  .sidebar {
+    width: 100%;
   }
-
-  .branding {
-    text-align: center;
+  h1 {
+    font-size: 1.8em;
   }
 }
