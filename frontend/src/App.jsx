@@ -64,6 +64,15 @@ export default function App() {
 
   return (
     <>
+      {/* ✅ Branding Header */}
+      <header className="branding-header">
+        <div className="branding-logo">
+          <span className="envelope-icon">✉</span>
+          <span className="branding-text">Letter to Future</span>
+        </div>
+      </header>
+
+      {/* ✅ Main content */}
       <div className="container">
         <div className="main-content">
           <h1>Write a Letter to Your Future Self 🌸</h1>
@@ -104,10 +113,10 @@ export default function App() {
               placeholder="Enter your email"
             />
 
-            {/* ✅ Show loader while waiting */}
+            {/* ✅ Loader */}
             {loading && <div className="progress-bar"></div>}
 
-            {/* ✅ Notification with close button */}
+            {/* ✅ Notification */}
             {notification && (
               <div className={`notification ${notification.type}`}>
                 <span>{notification.message}</span>
