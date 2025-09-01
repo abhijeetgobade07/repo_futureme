@@ -98,16 +98,49 @@ p {
     90deg,
     #00c9a7,
     #92fe9d
-  ); /* turquoise → lime green */
+  ); /* default turquoise → lime green */
   border: none;
   color: #fff;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
 }
 
-.send-btn:hover {
+.send-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 201, 167, 0.4);
+}
+
+/* ✅ Sending state (blue gradient) */
+.send-btn.loading {
+  background: linear-gradient(90deg, #2193b0, #6dd5ed); /* ocean blue */
+  cursor: wait;
+}
+
+.send-btn.loading:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* ✅ Progress bar */
+.progress-bar {
+  height: 5px;
+  width: 100%;
+  background: linear-gradient(90deg, #2193b0, #6dd5ed); /* blue to match sending */
+  border-radius: 5px;
+  margin-bottom: 10px;
+  animation: progressAnimation 2s linear infinite;
+}
+
+@keyframes progressAnimation {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* ✅ Notification inside sidebar */
@@ -121,7 +154,7 @@ p {
   color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
-  position: relative; /* to position close button */
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -143,12 +176,12 @@ p {
   opacity: 0.7;
 }
 
-/* Success theme */
+/* ✅ Success theme: Blue */
 .notification.success {
-  background: linear-gradient(90deg, #00c9a7, #92fe9d);
+  background: linear-gradient(90deg, #2193b0, #6dd5ed);
 }
 
-/* Error theme */
+/* Error theme: Red/Orange */
 .notification.error {
   background: linear-gradient(90deg, #ff6a00, #ee0979);
 }
