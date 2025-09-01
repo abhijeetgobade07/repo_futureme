@@ -64,7 +64,7 @@ export default function App() {
 
   return (
     <>
-      {/* ✅ Branding at the top */}
+      {/* ✅ Branding sits on its own row */}
       <div className="branding">
         <div className="branding-icon">✉️</div>
         <div className="branding-text">
@@ -73,7 +73,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* ✅ Main content container below branding */}
+      {/* ✅ Container sits below branding */}
       <div className="container">
         <div className="main-content">
           <h1>Write a Letter to Your Future Self 🌸</h1>
