@@ -14,11 +14,6 @@ export default function App() {
 
   function showNotification(message, type = "success") {
     setNotification({ message, type });
-
-    // Auto-hide after 3 seconds
-    setTimeout(() => {
-      setNotification(null);
-    }, 3000);
   }
 
   function sendLetter() {
@@ -37,8 +32,13 @@ export default function App() {
     // Convert IST to UTC
     const [hours, minutes] = time.split(":").map(Number);
     const [year, month, day] = date.split("-").map(Number);
-    const istDate = new Date(Date.UTC(year, month - 1, day, hours, minutes) - 5.5 * 60 * 60 * 1000);
-    const deliveryDateTime = istDate.toISOString().slice(0, 19).replace("T", " ");
+    const istDate = new Date(
+      Date.UTC(year, month - 1, day, hours, minutes) - 5.5 * 60 * 60 * 1000
+    );
+    const deliveryDateTime = istDate
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " ");
 
     fetch(`${API_BASE_URL}/send-letter`, {
       method: "POST",
@@ -53,25 +53,21 @@ export default function App() {
     })
       .then((res) => res.json())
       .then((data) => showNotification(data.message, "success"))
-      .catch(() => showNotification("Something went wrong. Try again later.", "error"));
+      .catch(() =>
+        showNotification("Something went wrong. Try again later.", "error")
+      );
   }
 
   return (
     <>
-      {/* Notification */}
-      {notification && (
-        <div className={`notification ${notification.type}`}>
-          {notification.message}
-        </div>
-      )}
-
       {/* Main content */}
       <div className="container">
         <div className="main-content">
           <h1>Write a Letter to Your Future Self 🌸</h1>
           <p>
             Pick a date, and let the future surprise you 💌 <br />
-            Your letter is private. No one else can read your letter — not even us 🔒
+            Your letter is private. No one else can read your letter — not even
+            us 🔒
           </p>
           <textarea className="letter-box" placeholder="Dear Future Me..." />
         </div>
@@ -79,10 +75,18 @@ export default function App() {
         <div className="sidebar">
           <div className="delivery-options">
             <label htmlFor="first-name">First Name</label>
-            <input type="text" id="first-name" placeholder="Enter your first name" />
+            <input
+              type="text"
+              id="first-name"
+              placeholder="Enter your first name"
+            />
 
             <label htmlFor="last-name">Last Name</label>
-            <input type="text" id="last-name" placeholder="Enter your last name" />
+            <input
+              type="text"
+              id="last-name"
+              placeholder="Enter your last name"
+            />
 
             <label htmlFor="future-date">Pick a delivery date</label>
             <input type="date" id="future-date" />
@@ -91,7 +95,24 @@ export default function App() {
             <input type="time" id="future-time" />
 
             <label htmlFor="future-email">Your email</label>
-            <input type="email" id="future-email" placeholder="Enter your email" />
+            <input
+              type="email"
+              id="future-email"
+              placeholder="Enter your email"
+            />
+
+            {/* ✅ Notification with close button */}
+            {notification && (
+              <div className={`notification ${notification.type}`}>
+                <span>{notification.message}</span>
+                <button
+                  className="close-btn"
+                  onClick={() => setNotification(null)}
+                >
+                  ✖
+                </button>
+              </div>
+            )}
 
             <button className="send-btn" onClick={sendLetter}>
               Send to the Future 🌈
