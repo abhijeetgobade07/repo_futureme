@@ -1,4 +1,31 @@
-/* App.css */
+/* Branding Header */
+.branding-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #fff8f0;
+  padding: 16px 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.branding-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.envelope-icon {
+  font-size: 1.8em;
+  color: #ff5722; /* coral accent */
+}
+
+.branding-text {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: #333;
+}
 
 /* Container layout */
 .container {
@@ -7,6 +34,8 @@
   gap: 24px;
   width: 100%;
   max-width: 1200px;
+  margin: 100px auto 0; /* ✅ push content down */
+  padding: 0 16px;
 }
 
 /* Happy cards */
@@ -94,11 +123,7 @@ p {
   font-size: 1.05em;
   font-weight: 600;
   border-radius: 10px;
-  background: linear-gradient(
-    90deg,
-    #00c9a7,
-    #92fe9d
-  ); /* default turquoise → lime green */
+  background: linear-gradient(90deg, #00c9a7, #92fe9d);
   border: none;
   color: #fff;
   cursor: pointer;
@@ -110,9 +135,9 @@ p {
   box-shadow: 0 6px 16px rgba(0, 201, 167, 0.4);
 }
 
-/* ✅ Sending state (blue gradient) */
+/* Sending state */
 .send-btn.loading {
-  background: linear-gradient(90deg, #2193b0, #6dd5ed); /* ocean blue */
+  background: linear-gradient(90deg, #2193b0, #6dd5ed);
   cursor: wait;
 }
 
@@ -121,11 +146,11 @@ p {
   box-shadow: none;
 }
 
-/* ✅ Progress bar */
+/* Progress bar */
 .progress-bar {
   height: 5px;
   width: 100%;
-  background: linear-gradient(90deg, #2193b0, #6dd5ed); /* blue to match sending */
+  background: linear-gradient(90deg, #2193b0, #6dd5ed);
   border-radius: 5px;
   margin-bottom: 10px;
   animation: progressAnimation 2s linear infinite;
@@ -143,7 +168,7 @@ p {
   }
 }
 
-/* ✅ Notification inside sidebar */
+/* Notification inside sidebar */
 .notification {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -176,12 +201,12 @@ p {
   opacity: 0.7;
 }
 
-/* ✅ Success theme: Blue */
+/* Success notification */
 .notification.success {
   background: linear-gradient(90deg, #2193b0, #6dd5ed);
 }
 
-/* Error theme: Red/Orange */
+/* Error notification */
 .notification.error {
   background: linear-gradient(90deg, #ff6a00, #ee0979);
 }
@@ -190,6 +215,7 @@ p {
 @media (max-width: 768px) {
   .container {
     grid-template-columns: 1fr;
+    margin-top: 80px;
   }
   .main-content,
   .sidebar {
@@ -197,5 +223,11 @@ p {
   }
   h1 {
     font-size: 1.8em;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    margin-top: 70px;
   }
 }
