@@ -15,7 +15,7 @@ export default function App() {
 
   function showNotification(message, type = "success") {
     setNotification({ message, type });
-    setLoading(false); // hide loader when notification appears
+    setLoading(false);
   }
 
   function sendLetter() {
@@ -31,7 +31,7 @@ export default function App() {
       return;
     }
 
-    setLoading(true); // show loader
+    setLoading(true);
 
     // Convert IST to UTC
     const [hours, minutes] = time.split(":").map(Number);
@@ -64,7 +64,7 @@ export default function App() {
 
   return (
     <>
-      {/* ✅ Branding sits on its own row */}
+      {/* ✅ Branding */}
       <div className="branding">
         <div className="branding-text">
           <span className="line1">Letter to</span>
@@ -72,18 +72,24 @@ export default function App() {
         </div>
       </div>
 
-      {/* ✅ Container sits below branding */}
+      {/* ✅ Hero Section */}
+      <div className="hero">
+        <h1>Write a Letter to Your Future Self 🌸</h1>
+        <p>
+          Pick a date, and let the future surprise you 💌 <br />
+          Your letter is private. No one else can read your letter — not even us
+          🔒
+        </p>
+      </div>
+
+      {/* ✅ Two-column layout */}
       <div className="container">
+        {/* Letter box on left */}
         <div className="main-content">
-          <h1>Write a Letter to Your Future Self 🌸</h1>
-          <p>
-            Pick a date, and let the future surprise you 💌 <br />
-            Your letter is private. No one else can read your letter — not even
-            us 🔒
-          </p>
           <textarea className="letter-box" placeholder="Dear Future Me..." />
         </div>
 
+        {/* Sidebar on right */}
         <div className="sidebar">
           <div className="delivery-options">
             <label htmlFor="first-name">First Name</label>
@@ -113,10 +119,10 @@ export default function App() {
               placeholder="Enter your email"
             />
 
-            {/* ✅ Show loader while waiting */}
+            {/* Loader */}
             {loading && <div className="progress-bar"></div>}
 
-            {/* ✅ Notification with close button */}
+            {/* Notification */}
             {notification && (
               <div className={`notification ${notification.type}`}>
                 <span>{notification.message}</span>
