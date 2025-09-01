@@ -15,7 +15,7 @@ export default function App() {
 
   function showNotification(message, type = "success") {
     setNotification({ message, type });
-    setLoading(false); // hide loader when notification appears
+    setLoading(false);
   }
 
   function sendLetter() {
@@ -31,9 +31,8 @@ export default function App() {
       return;
     }
 
-    setLoading(true); // show loader
+    setLoading(true);
 
-    // Convert IST to UTC
     const [hours, minutes] = time.split(":").map(Number);
     const [year, month, day] = date.split("-").map(Number);
     const istDate = new Date(
@@ -65,14 +64,14 @@ export default function App() {
   return (
     <>
       {/* ✅ Branding Header */}
-      <header className="branding-header">
-        <div className="branding-logo">
-          <span className="envelope-icon">✉</span>
-          <span className="branding-text">Letter to Future</span>
+      <header className="branding">
+        <div className="branding-icon">✉️</div>
+        <div className="branding-text">
+          <div className="line1">Letter to</div>
+          <div className="line2">Future</div>
         </div>
       </header>
 
-      {/* ✅ Main content */}
       <div className="container">
         <div className="main-content">
           <h1>Write a Letter to Your Future Self 🌸</h1>
@@ -113,10 +112,8 @@ export default function App() {
               placeholder="Enter your email"
             />
 
-            {/* ✅ Loader */}
             {loading && <div className="progress-bar"></div>}
 
-            {/* ✅ Notification */}
             {notification && (
               <div className={`notification ${notification.type}`}>
                 <span>{notification.message}</span>
