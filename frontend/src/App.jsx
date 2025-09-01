@@ -6,7 +6,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export default function App() {
   const [notification, setNotification] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
@@ -15,7 +14,6 @@ export default function App() {
 
   function showNotification(message, type = "success") {
     setNotification({ message, type });
-    setLoading(false);
   }
 
   function sendLetter() {
@@ -30,8 +28,6 @@ export default function App() {
       showNotification("Please fill in all fields.", "error");
       return;
     }
-
-    setLoading(true);
 
     // Convert IST to UTC
     const [hours, minutes] = time.split(":").map(Number);
@@ -64,32 +60,18 @@ export default function App() {
 
   return (
     <>
-      {/* ✅ Branding */}
-      <div className="branding">
-        <div className="branding-text">
-          <span className="line1">Letter to</span>
-          <span className="line2">Future</span>
-        </div>
-      </div>
-
-      {/* ✅ Hero Section */}
-      <div className="hero">
-        <h1>Write a Letter to Your Future Self 🌸</h1>
-        <p>
-          Pick a date, and let the future surprise you 💌 <br />
-          Your letter is private. No one else can read your letter — not even us
-          🔒
-        </p>
-      </div>
-
-      {/* ✅ Two-column layout */}
+      {/* Main content */}
       <div className="container">
-        {/* Letter box on left */}
         <div className="main-content">
+          <h1>Write a Letter to Your Future Self 🌸</h1>
+          <p>
+            Pick a date, and let the future surprise you 💌 <br />
+            Your letter is private. No one else can read your letter — not even
+            us 🔒
+          </p>
           <textarea className="letter-box" placeholder="Dear Future Me..." />
         </div>
 
-        {/* Sidebar on right */}
         <div className="sidebar">
           <div className="delivery-options">
             <label htmlFor="first-name">First Name</label>
@@ -119,10 +101,7 @@ export default function App() {
               placeholder="Enter your email"
             />
 
-            {/* Loader */}
-            {loading && <div className="progress-bar"></div>}
-
-            {/* Notification */}
+            {/* ✅ Notification with close button */}
             {notification && (
               <div className={`notification ${notification.type}`}>
                 <span>{notification.message}</span>
@@ -135,12 +114,8 @@ export default function App() {
               </div>
             )}
 
-            <button
-              className={`send-btn ${loading ? "loading" : ""}`}
-              onClick={sendLetter}
-              disabled={loading}
-            >
-              {loading ? "Sending..." : "Send to the Future 🌈"}
+            <button className="send-btn" onClick={sendLetter}>
+              Send to the Future 🌈
             </button>
           </div>
         </div>
