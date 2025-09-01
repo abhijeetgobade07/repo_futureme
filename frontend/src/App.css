@@ -86,9 +86,14 @@ p {
   color: #999;
 }
 
+/* Button container for relative positioning */
+.button-container {
+  position: relative;
+  margin-top: 12px;
+}
+
 /* Button */
 .send-btn {
-  margin-top: 12px;
   width: 100%;
   padding: 14px;
   font-size: 1.05em;
@@ -102,7 +107,7 @@ p {
   border: none;
   color: #fff;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
 }
 
 .send-btn:hover {
@@ -110,9 +115,21 @@ p {
   box-shadow: 0 6px 16px rgba(0, 201, 167, 0.4);
 }
 
-/* ✅ Notification inside sidebar */
+.send-btn.sending {
+  background: linear-gradient(
+    90deg,
+    #2196f3,
+    #64b5f6
+  ); /* blue gradient for sending state */
+  cursor: not-allowed;
+}
+
+/* Notification popup above button */
 .notification {
-  margin-top: 10px;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
   margin-bottom: 10px;
   padding: 12px 18px;
   border-radius: 10px;
@@ -120,12 +137,23 @@ p {
   font-weight: 600;
   color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  position: relative; /* to position close button */
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
+  animation: slideIn 0.3s ease-in-out;
+}
+
+/* Animation for notification popup */
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Close button */
