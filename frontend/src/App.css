@@ -1,6 +1,55 @@
 /* App.css */
 
-/* Container layout */
+/* ✅ Branding */
+.branding {
+  padding: 20px;
+  background: none;
+  box-shadow: none;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.branding-text {
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+  font-family: "Poppins", sans-serif;
+  color: #222;
+  line-height: 1.1;
+}
+
+.branding-text .line1 {
+  font-size: 1.6em;
+  color: #000;
+}
+
+.branding-text .line2 {
+  font-size: 1.8em;
+  color: #ff5722; /* coral accent */
+}
+
+/* ✅ Hero Section */
+.hero {
+  text-align: left;
+  margin: 20px auto;
+  max-width: 900px;
+  padding: 0 20px;
+}
+
+.hero h1 {
+  font-size: 2.3em;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #ff5722;
+}
+
+.hero p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* ✅ Container layout */
 .container {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -8,39 +57,25 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 20px;
 }
 
-/* Happy cards */
+/* ✅ Cards */
 .main-content,
 .sidebar {
-  background: #fff8f0; /* soft warm white */
+  background: #fff8f0;
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Typography */
-h1 {
-  font-size: 2.3em;
-  margin-bottom: 12px;
-  font-weight: 700;
-  color: #ff5722; /* coral accent */
-}
-
-p {
-  font-size: 1.1em;
-  margin-bottom: 20px;
-  line-height: 1.6;
-  color: #444;
-}
-
-/* Textarea */
+/* ✅ Letter Box */
 .letter-box {
   width: 100%;
-  height: 280px;
+  height: 300px;
   padding: 16px;
   border-radius: 12px;
-  border: 2px solid #ffb347; /* warm orange border */
+  border: 2px solid #ffb347;
   font-size: 1em;
   outline: none;
   resize: none;
@@ -53,11 +88,7 @@ p {
   border: 2px solid #ff5722;
 }
 
-/* Sidebar inputs */
-.delivery-options {
-  margin: 10px 0;
-}
-
+/* ✅ Sidebar inputs */
 .delivery-options label {
   display: block;
   font-size: 0.9em;
@@ -87,7 +118,7 @@ p {
   color: #999;
 }
 
-/* Button */
+/* ✅ Send button */
 .send-btn {
   margin-top: 12px;
   width: 100%;
@@ -95,11 +126,7 @@ p {
   font-size: 1.05em;
   font-weight: 600;
   border-radius: 10px;
-  background: linear-gradient(
-    90deg,
-    #00c9a7,
-    #92fe9d
-  ); /* default turquoise → lime green */
+  background: linear-gradient(90deg, #00c9a7, #92fe9d);
   border: none;
   color: #fff;
   cursor: pointer;
@@ -111,9 +138,8 @@ p {
   box-shadow: 0 6px 16px rgba(0, 201, 167, 0.4);
 }
 
-/* ✅ Sending state (blue gradient) */
 .send-btn.loading {
-  background: linear-gradient(90deg, #2193b0, #6dd5ed); /* ocean blue */
+  background: linear-gradient(90deg, #2193b0, #6dd5ed);
   cursor: wait;
 }
 
@@ -122,11 +148,11 @@ p {
   box-shadow: none;
 }
 
-/* ✅ Progress bar */
+/* ✅ Loader */
 .progress-bar {
   height: 5px;
   width: 100%;
-  background: linear-gradient(90deg, #2193b0, #6dd5ed); /* blue to match sending */
+  background: linear-gradient(90deg, #2193b0, #6dd5ed);
   border-radius: 5px;
   margin-bottom: 10px;
   animation: progressAnimation 2s linear infinite;
@@ -144,87 +170,52 @@ p {
   }
 }
 
-/* ✅ Notification inside sidebar */
+/* ✅ Notifications */
 .notification {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 10px 0;
   padding: 12px 18px;
   border-radius: 10px;
   font-size: 0.95em;
   font-weight: 600;
   color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   text-align: center;
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
 }
 
-/* Close button */
+.notification.success {
+  background: linear-gradient(90deg, #2193b0, #6dd5ed);
+}
+
+.notification.error {
+  background: linear-gradient(90deg, #ff6a00, #ee0979);
+}
+
 .close-btn {
   background: transparent;
   border: none;
   color: #fff;
   font-size: 1.1em;
   cursor: pointer;
-  margin-left: 8px;
-  transition: opacity 0.2s ease;
 }
 
 .close-btn:hover {
   opacity: 0.7;
 }
 
-/* ✅ Success theme: Blue */
-.notification.success {
-  background: linear-gradient(90deg, #2193b0, #6dd5ed);
-}
-
-/* Error theme: Red/Orange */
-.notification.error {
-  background: linear-gradient(90deg, #ff6a00, #ee0979);
-}
-
-/* ✅ Branding Header */
-.branding {
-  display: flex;
-  align-items: flex-start;
-  padding: 20px;
-  background: none; /* remove background */
-  box-shadow: none; /* remove shadow */
-  margin-bottom: 20px; /* spacing from letter box */
-}
-
-.branding-text {
-  display: flex;
-  flex-direction: column;
-  font-weight: 700;
-  font-family: "Poppins", sans-serif;
-  line-height: 1.2;
-}
-
-.branding-text .line1 {
-  font-size: 1.6em;
-  color: #222; /* dark gray */
-}
-
-.branding-text .line2 {
-  font-size: 1.8em;
-  color: #ff5722; /* coral/orange */
-}
-
-/* Responsive */
+/* ✅ Responsive */
 @media (max-width: 768px) {
   .container {
     grid-template-columns: 1fr;
   }
-  .main-content,
-  .sidebar {
-    width: 100%;
+
+  .hero {
+    text-align: center;
   }
-  h1 {
-    font-size: 1.8em;
+
+  .branding {
+    text-align: center;
   }
 }
