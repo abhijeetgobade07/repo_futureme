@@ -48,8 +48,8 @@ function formatDate(utcDate) {
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "abhijeet.gobade07@gmail.com",
-    pass: "bdkb deau clfy nnkc",
+    user: "lettertofuture.online@gmail.com",
+    pass: "tqvv eivr zvtb vbiw",
   },
 });
 
@@ -101,7 +101,7 @@ app.post("/send-letter", async (req, res) => {
 
     // Send confirmation email
     const mailOptions = {
-      from: '"LetterToFuture" <abhijeet.gobade07@gmail.com>',
+      from: '"LetterToFuture" <lettertofuture.online@gmail.com>',
       to: email,
       subject: "📬 Your Letter is Scheduled!",
       html: `
@@ -136,7 +136,7 @@ cron.schedule("* * * * *", async () => {
       const istDeliveryDateTime = formatDate(delivery_datetime);
 
       const mailOptions = {
-        from: '"LetterToFuture" <abhijeet.gobade07@gmail.com>',
+        from: '"LetterToFuture" <lettertofuture.online@gmail.com>',
         to: email,
         subject: "📨 A Letter from Your Past Self",
         html: `
